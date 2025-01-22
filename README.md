@@ -45,16 +45,17 @@ On the platform a few workloads are deployed:
     azure:
       type: Standard_D8s_v5
 ```
-1. `mkdir ./ocp-install && mv openshift-install.yaml ./ocp-install`
+1. `mkdir ./ocp-install && mv install-config.yaml ./ocp-install`
 2. `openshift-install create cluster --dir=./ocp-install`
 
 
 
 #### Configuring secrets / params
-1. Setup `values-secret-coco-pattern.yaml` from the template
-1. If you have not previously, run `./scripts/gen-ssh-key-azure.sh`
+1. `cp values-secret.yaml.template ~/values-secret-coco-pattern.yaml`
+1. If you have not previously, run `./scripts/azure/gen-ssh-key-azure.sh`
 2. If you have not previously, run `./scripts/gen-kbs-keys.sh`
-3. Populate the azure details between those that must be known already (CLIENT_ID etc) and using, when logged into `az`, `sh ./get-azure-details.sh`
+3. Populate the azure details between those that must be known already (CLIENT_ID etc) and using, when logged into `az` and `oc`, `sh ./scripts/azure/get-azure-details.sh`
+1. Create an htpasswd in `~/ocp.htpasswd`
 4. Update `charts/all/sandbox/values.yaml` with the appropriate azure details
 5. Recommended: Disable the kata config until system is up.
 
@@ -64,15 +65,15 @@ The following fields must be populated for
 ```yaml
 global:
   azure:
-    clientID: ''
-    subscriptionID: ''
-    tenantID: ''
-    DNSResGroup: ''
-    hostedZoneName: ''
-    clusterResGroup: ''
-    clusterSubnet: ''
-    clusterNSG: ''
-    clusterRegion: ''
+   clientID: '' # Azure service principal ID
+   subscriptionID: '' # azure subscription UUID
+   tenantID: '' # tenant ID - will look like a name
+   DNSResGroup: '' # resource group where DNS Zone is hosted
+   hostedZoneName: '' # Hosted zone name. Will be a dns entry in azure dns you have access to. Check in the azure portal
+   clusterResGroup: '' # resource group for the cluster
+   clusterSubnet: '' # subnet for the worker node
+   clusterNSG: '' # network security group for the worker node
+   clusterRegion: '' # named azure region
 ```
 
 

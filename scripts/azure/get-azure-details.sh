@@ -3,6 +3,8 @@
 echo "You need to be logged into the cluster and azure"
 AZURE_RESOURCE_GROUP=$(oc get infrastructure/cluster -o jsonpath='{.status.platformStatus.azure.resourceGroupName}')
 
+AZURE_REGION=$(az group show --resource-group $AZURE_RESOURCE_GROUP --query "{Location:location}" --output tsv)
+
 # Get VNET name used by ARO. This exists in the admin created RG
 ARO_VNET_NAME=$(az network vnet list --resource-group $AZURE_RESOURCE_GROUP --query "[].{Name:name}" --output tsv)
 
